@@ -1,7 +1,7 @@
 {
   "name": "yandex-search-mcp",
   "version": "0.0.1",
-  "description": "Yandex Search MCP server with Playwright automation",
+  "description": "Unofficial MCP server for Yandex search - Community project not affiliated with Yandex or Anthropic",
   "type": "module",
   "bin": {
     "yandex-search-mcp": "./dist/index.js"

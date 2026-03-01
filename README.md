@@ -4,12 +4,28 @@
 [![TypeScript](https://img.shields.io/badge/TypeScript-5.3-blue)](https://www.typescriptlang.org/)
 [![Playwright](https://img.shields.io/badge/Playwright-1.40-green)](https://playwright.dev/)
 [![License](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
+[![Unofficial](https://img.shields.io/badge/Unofficial-Community_Project-orange)](https://github.com/bpawnzZ/yandex-search-mcp)
+
+> **⚠️ IMPORTANT DISCLAIMER**
+> 
+> This is an **unofficial community project** and is not affiliated with, endorsed by, or connected to:
+> - **Yandex LLC** (the search engine provider)
+> - **Anthropic** (creators of Claude and MCP)
+> - **Google** (Playwright maintainers)
+> 
+> This tool uses browser automation to access Yandex search. Users are responsible for:
+> - Complying with Yandex's Terms of Service
+> - Respecting rate limits and bot policies
+> - Using their own authentication cookies
+> - Not using this tool for malicious purposes
 
 A Model Context Protocol (MCP) server that enables AI assistants to perform web searches using Yandex. Built with Playwright for reliable browser automation and stealth capabilities.
 
 ## Overview
 
-This MCP server provides a `yandex_search` tool that allows AI assistants like Claude to search the web via Yandex. It uses Playwright with stealth plugins to bypass bot detection and provides real-time search results in a structured format.
+This **unofficial community MCP server** provides a `yandex_search` tool that allows AI assistants like Claude to search the web via Yandex. It uses Playwright with stealth plugins to bypass bot detection and provides real-time search results in a structured format.
+
+> **Note**: This is a community project not affiliated with Yandex or Anthropic.
 
 ## Features
 
