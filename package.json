@@ -1,0 +1,30 @@
+{
+  "name": "yandex-search-mcp",
+  "version": "0.0.1",
+  "description": "Yandex Search MCP server with Playwright automation",
+  "type": "module",
+  "bin": {
+    "yandex-search-mcp": "./dist/index.js"
+  },
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "tsc",
+    "prepare": "npm run build",
+    "watch": "tsc --watch",
+    "start": "node dist/index.js"
+  },
+  "dependencies": {
+    "mcp-framework": "^0.1.27",
+    "playwright": "^1.40.0",
+    "playwright-extra": "^4.3.6",
+    "puppeteer-extra-plugin-stealth": "^2.11.2",
+    "zod": "^3.22.0",
+    "undici": "^7.4.0"
+  },
+  "devDependencies": {
+    "@types/node": "^20.11.24",
+    "typescript": "^5.3.3"
+  }
+}
