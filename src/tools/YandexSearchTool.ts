@@ -7,9 +7,12 @@ import { MCPTool } from 'mcp-framework';
 import { z } from 'zod';
 import BrowserManager from '../browser/BrowserManager.js';
 
-interface SearchInput {
+interface YandexSearchInput {
   query: string;
   numResults?: number;
+  region?: string;
+  language?: string;
+  safeSearch?: boolean;
 }
 
 interface SearchResult {
@@ -18,18 +21,41 @@ interface SearchResult {
   snippet: string;
 }
 
-export class YandexSearchTool extends MCPTool<SearchInput> {
+interface YandexSearchResponse {
+  results: SearchResult[];
+  total: number;
+  query: string;
+  region: string;
+}
+
+export class YandexSearchTool extends MCPTool<YandexSearchInput> {
   name = 'yandex_search';
   description = 'Search Yandex.com and return results';
 
   schema = {
     query: {
       type: z.string(),
-      description: 'Search query string',
+      description: 'The search query to execute on Yandex',
     },
     numResults: {
       type: z.number().optional(),
-      description: 'Number of results to return (default: 10)',
+      description: 'Number of results to return (default: 10, max: 50)',
+      default: 10,
+    },
+    region: {
+      type: z.string().optional(),
+      description: 'Yandex region (com, ru, tr, etc.)',
+      default: 'com',
+    },
+    language: {
+      type: z.string().optional(),
+      description: 'Language for search results (en, ru, tr, etc.)',
+      default: 'en',
+    },
+    safeSearch: {
+      type: z.boolean().optional(),
+      description: 'Enable safe search filter',
+      default: true,
     },
   };
 
@@ -37,12 +63,45 @@ export class YandexSearchTool extends MCPTool<SearchInput> {
 
   constructor() {
     super();
-    this.browserManager = new BrowserManager();
+    this.browserManager = BrowserManager.getInstance();
   }
 
-  async execute(input: SearchInput): Promise<SearchResult[]> {
-    // TODO: Implement Yandex search automation
-    return [];
+  async execute(input: YandexSearchInput): Promise<{
+    content: Array<{ type: 'text'; text: string }>;
+  }> {
+    const {
+      query,
+      numResults = 10,
+      region = 'com',
+      language = 'en',
+      safeSearch = true
+    } = input;
+
+    try {
+      await this.browserManager.initialize();
+
+      const results = await this.browserManager.searchYandex(query, {
+        numResults,
+        region,
+        language,
+        safeSearch,
+      });
+
+      return {
+        content: [{
+          type: 'text' as const,
+          text: JSON.stringify(results, null, 2),
+        }],
+      };
+    } catch (error) {
+      const errorMessage = error instanceof Error ? error.message : 'Unknown error occurred';
+      return {
+        content: [{
+          type: 'text' as const,
+          text: JSON.stringify({ error: errorMessage }, null, 2),
+        }],
+      };
+    }
   }
 }
 
