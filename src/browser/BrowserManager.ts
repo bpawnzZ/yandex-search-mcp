@@ -110,7 +110,33 @@ export class BrowserManager {
       const cookies = JSON.parse(cookiesData);
 
       if (Array.isArray(cookies) && cookies.length > 0) {
-        await this.context.addCookies(cookies);
+        const fixedCookies = cookies.map((cookie: any) => {
+          // Fix sameSite to valid Playwright values
+          let sameSite: 'Strict' | 'Lax' | 'None' = 'None';
+          if (cookie.sameSite === 'strict' || cookie.sameSite === 'Strict') {
+            sameSite = 'Strict';
+          } else if (cookie.sameSite === 'lax' || cookie.sameSite === 'Lax') {
+            sameSite = 'Lax';
+          } else if (cookie.sameSite === 'no_restriction') {
+            sameSite = 'None';
+          }
+
+          // Build cleaned cookie object
+          const cleanedCookie: any = {
+            name: cookie.name,
+            value: cookie.value,
+            domain: cookie.domain,
+            path: cookie.path || '/',
+            expires: cookie.expirationDate || -1,
+            httpOnly: cookie.httpOnly || false,
+            secure: cookie.secure || false,
+            sameSite: sameSite,
+          };
+
+          return cleanedCookie;
+        });
+
+        await this.context.addCookies(fixedCookies);
       }
     } catch (error) {
       console.error('Failed to load cookies:', error);
