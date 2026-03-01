@@ -49,7 +49,7 @@ This **unofficial community MCP server** provides a `yandex_search` tool that al
 
 ```bash
 # Clone the repository
-git clone https://github.com/yourusername/yandex-search-mcp.git
+git clone https://github.com/bpawnzZ/yandex-search-mcp.git
 cd yandex-search-mcp
 
 # Install dependencies
