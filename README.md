@@ -1,10 +1,19 @@
-# Yandex Search MCP
+# 🔍 Yandex Search MCP
 
-[![MCP](https://img.shields.io/badge/MCP-Framework-blue)](https://mcp-framework.com)
-[![TypeScript](https://img.shields.io/badge/TypeScript-5.3-blue)](https://www.typescriptlang.org/)
-[![Playwright](https://img.shields.io/badge/Playwright-1.40-green)](https://playwright.dev/)
+[![Node.js](https://img.shields.io/badge/Node.js-18+-green)](https://nodejs.org)
+[![Playwright](https://img.shields.io/badge/Playwright-1.40-blue)](https://playwright.dev)
+[![MCP](https://img.shields.io/badge/MCP-Compatible-brightgreen)](https://modelcontextprotocol.io)
+[![TypeScript](https://img.shields.io/badge/TypeScript-5.3-blue)](https://www.typescriptlang.org)
 [![License](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 [![Unofficial](https://img.shields.io/badge/Unofficial-Community_Project-orange)](https://github.com/bpawnzZ/yandex-search-mcp)
+[![GitHub Stars](https://img.shields.io/github/stars/bpawnzZ/yandex-search-mcp?style=social)](https://github.com/bpawnzZ/yandex-search-mcp)
+
+```ascii
+┌─────────────────────────────────────────────────────────────┐
+│  🔍 Yandex Search MCP - Unofficial Community Project        │
+│  ⚡ Powered by Playwright + TypeScript + MCP Framework       │
+└─────────────────────────────────────────────────────────────┘
+```
 
 > **⚠️ IMPORTANT DISCLAIMER**
 > 
@@ -19,7 +28,26 @@
 > - Using their own authentication cookies
 > - Not using this tool for malicious purposes
 
+## 📋 Table of Contents
+- [✨ Overview](#-overview)
+- [🚀 Quick Start](#-quick-start)
+- [⚡ Features](#-features)
+- [📦 Installation](#-installation)
+- [🍪 Cookie Setup](#-cookie-setup)
+- [⚙️ Configuration](#️-configuration)
+- [🎯 Usage Examples](#-usage-examples)
+- [🔧 How It Works](#-how-it-works)
+- [🛠️ Troubleshooting](#️-troubleshooting)
+- [🤝 Contributing](#-contributing)
+- [📄 License](#-license)
+
+## ✨ Overview
+
 A Model Context Protocol (MCP) server that enables AI assistants to perform web searches using Yandex. Built with Playwright for reliable browser automation and stealth capabilities.
+
+This **unofficial community MCP server** provides a `yandex_search` tool that allows AI assistants like Claude to search the web via Yandex. It uses Playwright with stealth plugins to bypass bot detection and provides real-time search results in a structured format.
+
+> **📝 Note**: This is a community project not affiliated with Yandex or Anthropic.
 
 ## Overview
 
@@ -27,23 +55,45 @@ This **unofficial community MCP server** provides a `yandex_search` tool that al
 
 > **Note**: This is a community project not affiliated with Yandex or Anthropic.
 
-## Features
+## 🚀 Quick Start
 
-- **Web Search**: Search Yandex with customizable parameters
-- **Stealth Mode**: Uses Playwright with stealth plugins to avoid detection
-- **Cookie Persistence**: Maintain session state across searches
-- **Configurable**: Support for different regions, languages, and result counts
-- **Safe Search**: Optional content filtering
-- **Structured Output**: JSON-formatted search results
+```bash
+# 1. Clone the repository
+git clone https://github.com/bpawnzZ/yandex-search-mcp.git
+cd yandex-search-mcp
 
-## Prerequisites
+# 2. Install dependencies
+npm install
 
-- Node.js 18+ 
-- npm or yarn
-- A Yandex account (for cookies)
-- Cookie-Editor browser extension (or similar)
+# 3. Build the project
+npm run build
 
-## Installation
+# 4. Configure cookies (see Cookie Setup section)
+# 5. Add to MCP client configuration
+# 6. Start searching! 🎉
+```
+
+## ⚡ Features
+
+| Feature | Description | Status |
+|---------|-------------|--------|
+| 🔍 Web Search | Search Yandex with queries | ✅ |
+| 🕵️ Stealth Mode | Avoid bot detection | ✅ |
+| 🍪 Cookie Persistence | Maintain sessions | ✅ |
+| 🌍 Multi-region | com, ru, tr, etc. | ✅ |
+| 🔒 Safe Search | Content filtering | ✅ |
+| 📊 Structured Output | JSON-formatted results | ✅ |
+| ⚡ Performance | Fast search execution | ✅ |
+| 🔧 Configurable | Custom parameters | ✅ |
+
+## 📦 Installation
+
+### 📋 Prerequisites
+
+- **Node.js 18+** 
+- **npm** or **yarn**
+- **Yandex account** (for cookies)
+- **Cookie-Editor** browser extension (or similar)
 
 ### Option 1: Clone and Build
 
@@ -65,7 +115,7 @@ npm run build
 npx yandex-search-mcp
 ```
 
-## Cookie Setup
+## 🍪 Cookie Setup
 
 This tool requires Yandex authentication cookies to perform searches. Follow these steps to obtain and configure them:
 

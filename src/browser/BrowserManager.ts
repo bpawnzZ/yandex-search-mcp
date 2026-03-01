@@ -74,7 +74,7 @@ export class BrowserManager {
     this.context = await this.browser.newContext({
       viewport: { width: 1920, height: 1080 },
       userAgent:
-        'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
+        'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/130.0.0.0 Safari/537.36',
     });
 
     this.page = await this.context.newPage();
@@ -110,7 +110,33 @@ export class BrowserManager {
       const cookies = JSON.parse(cookiesData);
 
       if (Array.isArray(cookies) && cookies.length > 0) {
-        await this.context.addCookies(cookies);
+        const fixedCookies = cookies.map((cookie: any) => {
+          // Fix sameSite to valid Playwright values
+          let sameSite: 'Strict' | 'Lax' | 'None' = 'None';
+          if (cookie.sameSite === 'strict' || cookie.sameSite === 'Strict') {
+            sameSite = 'Strict';
+          } else if (cookie.sameSite === 'lax' || cookie.sameSite === 'Lax') {
+            sameSite = 'Lax';
+          } else if (cookie.sameSite === 'no_restriction') {
+            sameSite = 'None';
+          }
+
+          // Build cleaned cookie object
+          const cleanedCookie: any = {
+            name: cookie.name,
+            value: cookie.value,
+            domain: cookie.domain,
+            path: cookie.path || '/',
+            expires: cookie.expirationDate || -1,
+            httpOnly: cookie.httpOnly || false,
+            secure: cookie.secure || false,
+            sameSite: sameSite,
+          };
+
+          return cleanedCookie;
+        });
+
+        await this.context.addCookies(fixedCookies);
       }
     } catch (error) {
       console.error('Failed to load cookies:', error);
