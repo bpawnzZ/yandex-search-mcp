@@ -1,5 +1,3 @@
-# 🔍 Yandex Search MCP
-
 [![Node.js](https://img.shields.io/badge/Node.js-18+-green)](https://nodejs.org)
 [![Playwright](https://img.shields.io/badge/Playwright-1.40-blue)](https://playwright.dev)
 [![MCP](https://img.shields.io/badge/MCP-Compatible-brightgreen)](https://modelcontextprotocol.io)
@@ -12,6 +10,7 @@
 ┌─────────────────────────────────────────────────────────────┐
 │  🔍 Yandex Search MCP - Unofficial Community Project        │
 │  ⚡ Powered by Playwright + TypeScript + MCP Framework       │
+│  🚀 Enhanced with Content Extraction & LLM Context          │
 └─────────────────────────────────────────────────────────────┘
 ```
 
@@ -29,31 +28,40 @@
 > - Not using this tool for malicious purposes
 
 ## 📋 Table of Contents
-- [✨ Overview](#-overview)
+- [✨ Features](#-features)
 - [🚀 Quick Start](#-quick-start)
-- [⚡ Features](#-features)
 - [📦 Installation](#-installation)
 - [🍪 Cookie Setup](#-cookie-setup)
 - [⚙️ Configuration](#️-configuration)
-- [🎯 Usage Examples](#-usage-examples)
-- [🔧 How It Works](#-how-it-works)
+- [🎯 Usage](#-usage)
+- [🔧 Tools](#-tools)
+- [🏗️ Architecture](#️-architecture)
 - [🛠️ Troubleshooting](#️-troubleshooting)
 - [🤝 Contributing](#-contributing)
 - [📄 License](#-license)
 
-## ✨ Overview
+## ✨ Features
 
-A Model Context Protocol (MCP) server that enables AI assistants to perform web searches using Yandex. Built with Playwright for reliable browser automation and stealth capabilities.
+### Core Capabilities
 
-This **unofficial community MCP server** provides a `yandex_search` tool that allows AI assistants like Claude to search the web via Yandex. It uses Playwright with stealth plugins to bypass bot detection and provides real-time search results in a structured format.
+| Feature | Description | Status |
+|---------|-------------|--------|
+| 🔍 **Yandex Search** | Search Yandex with full parameter control | ✅ |
+| 🕵️ **Stealth Mode** | Playwright with anti-detection plugins | ✅ |
+| 🍪 **Cookie Auth** | Persistent authentication to bypass CAPTCHA | ✅ |
+| 🌍 **Multi-region** | Support for yandex.com, .ru, .tr, etc. | ✅ |
+| 🔒 **Safe Search** | Content filtering options | ✅ |
 
-> **📝 Note**: This is a community project not affiliated with Yandex or Anthropic.
+### Enhanced Features (v2.0)
 
-## Overview
-
-This **unofficial community MCP server** provides a `yandex_search` tool that allows AI assistants like Claude to search the web via Yandex. It uses Playwright with stealth plugins to bypass bot detection and provides real-time search results in a structured format.
-
-> **Note**: This is a community project not affiliated with Yandex or Anthropic.
+| Feature | Description | Status |
+|---------|-------------|--------|
+| 📄 **Content Extraction** | Automatically fetch and extract page content | ✅ |
+| 🧠 **Relevance Scoring** | AI-powered content ranking and prioritization | ✅ |
+| 📊 **LLM Context Format** | Structured output optimized for LLMs | ✅ |
+| 💾 **Smart Caching** | LRU cache with domain-specific TTLs | ✅ |
+| 🎯 **Source Diversity** | Prevents domain clustering in results | ✅ |
+| 📈 **Token Management** | Intelligent truncation with sentence preservation | ✅ |
 
 ## 🚀 Quick Start
 
@@ -73,39 +81,21 @@ npm run build
 # 6. Start searching! 🎉
 ```
 
-## ⚡ Features
-
-| Feature | Description | Status |
-|---------|-------------|--------|
-| 🔍 Web Search | Search Yandex with queries | ✅ |
-| 🕵️ Stealth Mode | Avoid bot detection | ✅ |
-| 🍪 Cookie Persistence | Maintain sessions | ✅ |
-| 🌍 Multi-region | com, ru, tr, etc. | ✅ |
-| 🔒 Safe Search | Content filtering | ✅ |
-| 📊 Structured Output | JSON-formatted results | ✅ |
-| ⚡ Performance | Fast search execution | ✅ |
-| 🔧 Configurable | Custom parameters | ✅ |
-
 ## 📦 Installation
 
-### 📋 Prerequisites
+### Prerequisites
 
-- **Node.js 18+** 
-- **npm** or **yarn**
-- **Yandex account** (for cookies)
-- **Cookie-Editor** browser extension (or similar)
+- Node.js 18+ 
+- npm or yarn
+- A Yandex account (for cookies)
+- Cookie-Editor browser extension (or similar)
 
 ### Option 1: Clone and Build
 
 ```bash
-# Clone the repository
 git clone https://github.com/bpawnzZ/yandex-search-mcp.git
 cd yandex-search-mcp
-
-# Install dependencies
 npm install
-
-# Build the project
 npm run build
 ```
 
@@ -117,244 +107,315 @@ npx yandex-search-mcp
 
 ## 🍪 Cookie Setup
 
-This tool requires Yandex authentication cookies to perform searches. Follow these steps to obtain and configure them:
+### Why Cookies?
 
-### Step 1: Install Cookie-Editor
+Yandex implements CAPTCHA challenges for automated requests. Using authenticated cookies allows the tool to bypass these challenges and perform searches seamlessly.
 
-1. Install the [Cookie-Editor extension](https://cookie-editor.com/) for your browser:
-   - [Chrome](https://chrome.google.com/webstore/detail/cookie-editor/hlkenndedknhfedapcpdkecmffpgnbdf)
-   - [Firefox](https://addons.mozilla.org/en-US/firefox/addon/cookie-editor/)
-   - [Edge](https://microsoftedge.microsoft.com/addons/detail/cookie-editor/ajfboajkfmjjpkejkchjdkjpjdmcgoii)
+### Getting Your Cookies
 
-### Step 2: Get Cookies from Yandex
+1. **Install Cookie-Editor Extension:**
+   - Chrome: [Cookie-Editor Extension](https://chrome.google.com/webstore/detail/cookie-editor/hlkenndednhfkekhcacofpbbnbalhlhf)
+   - Firefox: [Cookie-Editor Add-on](https://addons.mozilla.org/en-US/firefox/addon/cookie-editor/)
 
-1. Go to [yandex.com](https://yandex.com) and log in to your account
-2. Perform a search to ensure your session is active
-3. Click on the Cookie-Editor extension icon
-4. Click **"Export"** → **"Export as JSON"**
-5. Copy the exported JSON
+2. **Log in to Yandex:**
+   - Go to [yandex.com](https://yandex.com)
+   - Log in to your Yandex account (or create one)
+   - Perform a search to ensure cookies are set
 
-### Step 3: Configure Cookies
+3. **Export Cookies:**
+   - Click the Cookie-Editor icon in your browser
+   - Click the "Export" button (or JSON format)
+   - Copy the JSON array
 
-1. Open `cookies/yandex-cookies.json` in the project directory
-2. Paste your exported cookies, or replace the placeholder values:
-   - `Session_id`: Your Yandex session ID
-   - `yandexuid`: Your Yandex user ID
-   - `is_gdpr`: GDPR consent flag (usually "0")
+4. **Save Cookies:**
+   - Paste the JSON into `cookies/yandex-cookies.json`
+   - Ensure the file is valid JSON
 
-**Example cookie structure:**
+### Sample Cookie File Structure
+
 ```json
 [
   {
     "domain": ".yandex.com",
+    "expirationDate": 1800000000.000000,
+    "hostOnly": false,
+    "httpOnly": true,
     "name": "Session_id",
-    "value": "3:1772401761.5.0...",
     "path": "/",
+    "sameSite": "no_restriction",
     "secure": true,
-    "httpOnly": true
-  },
-  {
-    "domain": ".yandex.com",
-    "name": "yandexuid",
-    "value": "1234567890123456789",
-    "path": "/",
-    "secure": true
+    "session": false,
+    "storeId": null,
+    "value": "YOUR_SESSION_ID_HERE"
   }
 ]
 ```
 
-> **Security Note**: Never commit your real cookies to version control. The cookies file is already in `.gitignore` for your protection.
+**Important:** Keep your cookies secure and don't commit them to public repositories!
 
-## MCP Configuration
+## ⚙️ Configuration
 
-Add the following configuration to your MCP client (Claude Desktop, Cline, etc.):
+### MCP Client Configuration
 
-### Claude Desktop
+#### Claude Desktop
 
-**macOS**: `~/Library/Application Support/Claude/claude_desktop_config.json`
-**Windows**: `%APPDATA%/Claude/claude_desktop_config.json`
-**Linux**: `~/.config/Claude/claude_desktop_config.json`
+Add to your `claude_desktop_config.json`:
 
 ```json
 {
   "mcpServers": {
     "yandex-search": {
       "command": "node",
-      "args": ["/absolute/path/to/yandex-search-mcp/dist/index.js"]
+      "args": ["/path/to/yandex-search-mcp/dist/index.js"],
+      "env": {
+        "NODE_ENV": "production"
+      }
     }
   }
 }
 ```
 
-### Cline (VS Code Extension)
+#### Cline (VS Code Extension)
 
-Add to your Cline MCP settings:
+Add to `~/.kilocode/mcp.json`:
 
 ```json
 {
   "mcpServers": {
     "yandex-search": {
       "command": "node",
-      "args": ["/absolute/path/to/yandex-search-mcp/dist/index.js"],
-      "disabled": false,
-      "autoApprove": []
+      "args": ["/home/insomnia/git/yandex-search-mcp/dist/index.js"]
     }
   }
 }
 ```
 
-## Usage Examples
+### Environment Variables
+
+```bash
+# Optional configuration
+MAX_PAGES_PER_QUERY=5        # Default: 3
+MAX_TOKENS_PER_PAGE=4000     # Default: 3000
+CACHE_TTL_HOURS=24          # Default: 24
+```
+
+## 🎯 Usage
 
 ### Basic Search
 
-```
-Search for "TypeScript best practices" using Yandex
-```
-
-### Advanced Search with Parameters
-
-```
-Search Yandex for "machine learning tutorials" with 20 results in Russian
-```
-
-### Tool Parameters
-
-| Parameter | Type | Default | Description |
-|-----------|------|---------|-------------|
-| `query` | string | required | The search query to execute |
-| `numResults` | number | 10 | Number of results to return (max: 50) |
-| `region` | string | "com" | Yandex region (com, ru, tr, etc.) |
-| `language` | string | "en" | Language for search results |
-| `safeSearch` | boolean | true | Enable safe search filter |
-
-### Example Output
-
-```json
+```typescript
+// Simple search - returns titles, URLs, snippets
 {
-  "results": [
-    {
-      "title": "TypeScript Best Practices for Clean Code",
-      "url": "https://example.com/typescript-best-practices",
-      "snippet": "Learn the essential TypeScript best practices for writing clean, maintainable code..."
-    },
-    {
-      "title": "10 TypeScript Tips for Better Code",
-      "url": "https://example.com/typescript-tips",
-      "snippet": "Improve your TypeScript development with these proven tips and tricks..."
-    }
-  ],
-  "total": 2,
-  "query": "TypeScript best practices",
-  "region": "com"
+  "tool": "yandex_search",
+  "params": {
+    "query": "artificial intelligence",
+    "numResults": 10,
+    "region": "com",
+    "language": "en"
+  }
 }
 ```
 
-## How It Works
+### Enhanced Search with Content Extraction
 
-### Architecture
-
-```
-┌─────────────┐     ┌─────────────────┐     ┌──────────────┐
-│   MCP Client │────▶│ YandexSearchTool │────▶│ BrowserManager│
-│  (Claude/etc)│     │   (MCP Tool)     │     │  (Playwright) │
-└─────────────┘     └─────────────────┘     └──────┬───────┘
-                          │                        │
-                          │                        ▼
-                          │                 ┌──────────────┐
-                          │                 │ Yandex.com   │
-                          │                 │ (Search)     │
-                          │                 └──────────────┘
-                          │
-                          ▼
-                   ┌──────────────┐
-                   │ Cookie Store │
-                   │ (JSON File)  │
-                   └──────────────┘
+```typescript
+// Enhanced search - fetches and analyzes page content
+{
+  "tool": "yandex_search_enhanced",
+  "params": {
+    "query": "artificial intelligence benefits",
+    "numResults": 5,
+    "region": "com",
+    "fetch_content": true,
+    "max_pages": 3,
+    "max_tokens_per_page": 3000,
+    "analysis_level": "detailed",
+    "context_format": "synthesized"
+  }
+}
 ```
 
-### Technical Details
+### Output Formats
 
-1. **BrowserManager**: Singleton class managing Playwright browser instance with stealth plugins
-2. **Cookie Loading**: Authentication cookies loaded from `cookies/yandex-cookies.json`
-3. **Search Execution**: Playwright navigates to Yandex, performs search, extracts results
-4. **Result Parsing**: HTML parsed to extract titles, URLs, and snippets
-5. **Stealth Mode**: puppeteer-extra-plugin-stealth helps avoid bot detection
+The enhanced tool supports multiple output formats:
 
-### Browser Configuration
+| Format | Description | Use Case |
+|--------|-------------|----------|
+| `raw` | Full extracted content | When you need complete text |
+| `summarized` | Condensed with key points | Quick overview |
+| `synthesized` | Cross-source analysis (default) | Research and analysis |
+| `qa_ready` | Question-answer format | Direct answers |
 
-The tool uses Playwright with the following stealth measures:
-- User agent spoofing
-- Webdriver property hiding
-- Plugin list emulation
-- Screen size consistency
+### Example Response (Synthesized)
 
-## Troubleshooting
-
-### "Session expired" or "Authentication required"
-
-- Re-export fresh cookies from Yandex
-- Ensure you're logged in to yandex.com
-- Check that cookies file path is correct
-
-### "No results found"
-
-- Verify your Yandex account can perform searches manually
-- Check if Yandex has updated their page structure (may need code update)
-- Try different search queries
-
-### "Browser launch failed"
-
-- Ensure Playwright browsers are installed: `npx playwright install chromium`
-- Check for port conflicts on debug port (9222)
-- Verify Node.js version is 18+
-
-### "Request blocked" or CAPTCHA
-
-- Cookies may have expired; refresh them
-- Yandex may have detected automation; wait a few minutes
-- Try using a different Yandex account
-
-### Development Mode
-
-To run in development with auto-rebuild:
-
-```bash
-npm run watch
+```json
+{
+  "summary": "Based on 3 sources (12,456 words analyzed), here is what we found about \"artificial intelligence benefits\":",
+  "key_findings": [
+    {
+      "source": "example.com",
+      "finding": "AI increases productivity by 40% in manufacturing",
+      "confidence": "high"
+    }
+  ],
+  "synthesized_knowledge": "Synthesis of findings...",
+  "source_references": [
+    {
+      "url": "https://example.com/ai-benefits",
+      "title": "AI Benefits in 2026",
+      "key_points": ["Increased productivity", "Cost reduction"],
+      "relevance_note": "Relevance score: 85.3/100"
+    }
+  ],
+  "metadata": {
+    "query": "artificial intelligence benefits",
+    "total_results": 500,
+    "pages_fetched": 3,
+    "successful_extractions": 3,
+    "total_time_ms": 28500
+  }
+}
 ```
 
-## Contributing
+## 🔧 Tools
 
-Contributions are welcome! Please follow these steps:
+### yandex_search (Basic)
+
+Simple search tool returning titles, URLs, and snippets.
+
+**Parameters:**
+- `query` (string, required): Search query
+- `numResults` (number, optional): Number of results (default: 10, max: 50)
+- `region` (string, optional): Region code (default: "com")
+- `language` (string, optional): Language code (default: "en")
+- `safeSearch` (boolean, optional): Enable safe search (default: true)
+
+### yandex_search_enhanced (Advanced)
+
+Full-featured search with content extraction and analysis.
+
+**Parameters:**
+- All basic parameters plus:
+- `fetch_content` (boolean, optional): Fetch page content (default: true)
+- `max_pages` (number, optional): Max pages to fetch (default: 3, max: 10)
+- `max_tokens_per_page` (number, optional): Token limit per page (default: 3000)
+- `analysis_level` (enum, optional): "basic" | "detailed" | "comprehensive"
+- `context_format` (enum, optional): "raw" | "summarized" | "synthesized" | "qa_ready"
+
+## 🏗️ Architecture
+
+```
+┌──────────────────────────────────────────────────────────────┐
+│                    Yandex Search MCP                          │
+├──────────────────────────────────────────────────────────────┤
+│                                                               │
+│  ┌──────────────┐     ┌──────────────────────────────────┐   │
+│  │ Basic Search │     │        Enhanced Pipeline         │   │
+│  │              │     │                                  │   │
+│  │ • Search     │     │  ┌─────────────┐  ┌──────────┐   │   │
+│  │ • Snippets   │     │  │   Browser   │→ │  Search  │   │   │
+│  │ • URLs       │     │  │   Manager   │  │          │   │   │
+│  └──────────────┘     │  └─────────────┘  └────┬─────┘   │   │
+│                       │                        │         │   │
+│                       │  ┌─────────────┐  ┌────▼─────┐   │   │
+│                       │  │  Content    │  │ Extract  │   │   │
+│                       │  │  Extractor  │←─┤ Content  │   │   │
+│                       │  └─────────────┘  └────┬─────┘   │   │
+│                       │                        │         │   │
+│                       │  ┌─────────────┐  ┌────▼─────┐   │   │
+│                       │  │  Relevance  │  │   Cache  │   │   │
+│                       │  │   Scorer    │←─┤   (LRU)  │   │   │
+│                       │  └─────────────┘  └──────────┘   │   │
+│                       │                        │         │   │
+│                       │  ┌──────────────────┐  │         │   │
+│                       │  │  LLM Context     │←─┘         │   │
+│                       │  │  Formatter       │            │   │
+│                       │  └──────────────────┘            │   │
+│                       │                        │         │   │
+│                       │  ┌──────────────────┐  │         │   │
+│                       │  │  Structured      │←─┘         │   │
+│                       │  │  JSON Output     │            │   │
+│                       │  └──────────────────┘            │   │
+│                       └──────────────────────────────────┘   │
+│                                                               │
+└──────────────────────────────────────────────────────────────┘
+```
+
+### Key Components
+
+1. **BrowserManager**: Singleton managing Playwright browser with stealth
+2. **ContentExtractor**: Fetches and extracts meaningful content from pages
+3. **RelevanceScorer**: Scores and ranks content by query relevance
+4. **LLMContextFormatter**: Formats output for optimal LLM consumption
+5. **ContentCache**: LRU cache with domain-specific TTLs
+
+## 🛠️ Troubleshooting
+
+### CAPTCHA Detected
+
+**Symptom:** Results contain `error: 'CAPTCHA detected'`
+
+**Solution:**
+1. Re-export fresh cookies from your browser
+2. Ensure you're logged into Yandex
+3. Replace cookies in `cookies/yandex-cookies.json`
+
+### Cookie Loading Errors
+
+**Symptom:** `sameSite: expected one of (Strict|Lax|None)`
+
+**Solution:** This is automatically handled by the cookie normalization in BrowserManager.
+
+### Content Not Extracting
+
+**Symptom:** Empty or minimal content from pages
+
+**Possible Causes:**
+- Heavy JavaScript (increase wait time)
+- Login/paywall required
+- Anti-scraping measures
+
+### High Memory Usage
+
+**Solution:**
+- Reduce `max_pages` parameter
+- Lower `max_tokens_per_page`
+- Cache will automatically evict old entries
+
+## 🤝 Contributing
+
+Contributions are welcome! Please:
 
 1. Fork the repository
-2. Create a feature branch: `git checkout -b feature/amazing-feature`
-3. Commit your changes: `git commit -m 'Add amazing feature'`
-4. Push to the branch: `git push origin feature/amazing-feature`
+2. Create a feature branch (`git checkout -b feature/amazing-feature`)
+3. Commit your changes (`git commit -m 'Add amazing feature'`)
+4. Push to the branch (`git push origin feature/amazing-feature`)
 5. Open a Pull Request
 
-### Development Setup
+### Development Guidelines
 
-```bash
-# Install dependencies
-npm install
+- Follow TypeScript best practices
+- Add comments for complex logic
+- Update documentation for new features
+- Test thoroughly before submitting
 
-# Build TypeScript
-npm run build
-
-# Watch for changes
-npm run watch
-```
-
-## License
+## 📄 License
 
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
 
-## Acknowledgments
+## 🙏 Acknowledgments
 
-- Built with [mcp-framework](https://mcp-framework.com)
-- Browser automation powered by [Playwright](https://playwright.dev)
-- Stealth capabilities from [puppeteer-extra-plugin-stealth](https://github.com/berstend/puppeteer-extra/tree/master/packages/puppeteer-extra-plugin-stealth)
+- [MCP Framework](https://mcp-framework.com) - The framework powering this tool
+- [Playwright](https://playwright.dev) - Browser automation
+- [Yandex](https://yandex.com) - Search engine (unofficial use)
 
-## Disclaimer
+## 📞 Support
 
-This tool is for educational and personal use. Please respect Yandex's Terms of Service and use responsibly. The authors are not responsible for any misuse of this software.
+- **Issues:** [GitHub Issues](https://github.com/bpawnzZ/yandex-search-mcp/issues)
+- **Discussions:** [GitHub Discussions](https://github.com/bpawnzZ/yandex-search-mcp/discussions)
+
+---
+
+**Made with ⚡ by the community, for the community.**
+
+*This is an unofficial tool. Please use responsibly and respect Yandex's Terms of Service.*
