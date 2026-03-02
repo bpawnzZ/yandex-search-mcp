@@ -103,14 +103,9 @@ export class YandexSearchEnhancedTool extends MCPTool<YandexSearchEnhancedInput>
 
       if (searchResults.error) {
         return {
-          content: [{
-            type: 'text',
-            text: JSON.stringify({
-              error: searchResults.error,
-              query: input.query,
-            }, null, 2),
-          }],
-        } as any;
+          error: searchResults.error,
+          query: input.query,
+        };
       }
 
       // 3. Convert to enhanced results
@@ -150,53 +145,38 @@ export class YandexSearchEnhancedTool extends MCPTool<YandexSearchEnhancedInput>
         const totalTime = Date.now() - startTime;
         
         return {
-          content: [{
-            type: 'text',
-            text: JSON.stringify({
-              ...output,
-              metadata: {
-                query: input.query,
-                total_results: searchResults.totalResults,
-                pages_fetched: enhancedResults.filter(r => r.fetched_content).length,
-                successful_extractions: enhancedResults.filter(
-                  r => r.fetched_content?.metadata.status === 'success'
-                ).length,
-                cache_stats: this.cache.getStats(),
-                total_time_ms: totalTime,
-                analysis_level: input.analysis_level,
-                context_format: input.context_format,
-              },
-            }, null, 2),
-          }],
-        } as any;
+          ...output,
+          metadata: {
+            query: input.query,
+            total_results: searchResults.totalResults,
+            pages_fetched: enhancedResults.filter(r => r.fetched_content).length,
+            successful_extractions: enhancedResults.filter(
+              r => r.fetched_content?.metadata.status === 'success'
+            ).length,
+            cache_stats: this.cache.getStats(),
+            total_time_ms: totalTime,
+            analysis_level: input.analysis_level,
+            context_format: input.context_format,
+          },
+        };
       }
 
       // Return basic search results if fetch_content is disabled
       return {
-        content: [{
-          type: 'text',
-          text: JSON.stringify({
-            query: input.query,
-            total_results: searchResults.totalResults,
-            results: enhancedResults,
-            note: 'Content fetching disabled. Enable fetch_content for full analysis.',
-          }, null, 2),
-        }],
-      } as any;
+        query: input.query,
+        total_results: searchResults.totalResults,
+        results: enhancedResults,
+        note: 'Content fetching disabled. Enable fetch_content for full analysis.',
+      };
 
     } catch (error) {
       const errorMessage = error instanceof Error ? error.message : 'Unknown error';
       console.error('[YandexEnhanced] Error:', errorMessage);
       
       return {
-        content: [{
-          type: 'text',
-          text: JSON.stringify({
-            error: errorMessage,
-            query: input.query,
-          }, null, 2),
-        }],
-      } as any;
+        error: errorMessage,
+        query: input.query,
+      };
     }
   }
 

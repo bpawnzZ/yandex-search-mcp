@@ -66,9 +66,7 @@ export class YandexSearchTool extends MCPTool<YandexSearchInput> {
     this.browserManager = BrowserManager.getInstance();
   }
 
-  async execute(input: YandexSearchInput): Promise<{
-    content: Array<{ type: 'text'; text: string }>;
-  }> {
+  async execute(input: YandexSearchInput): Promise<any> {
     const {
       query,
       numResults = 10,
@@ -87,20 +85,10 @@ export class YandexSearchTool extends MCPTool<YandexSearchInput> {
         safeSearch,
       });
 
-      return {
-        content: [{
-          type: 'text',
-          text: JSON.stringify(results, null, 2),
-        }],
-      } as any;
+      return results;
     } catch (error) {
       const errorMessage = error instanceof Error ? error.message : 'Unknown error occurred';
-      return {
-        content: [{
-          type: 'text',
-          text: JSON.stringify({ error: errorMessage }, null, 2),
-        }],
-      } as any;
+      return { error: errorMessage };
     }
   }
 }
