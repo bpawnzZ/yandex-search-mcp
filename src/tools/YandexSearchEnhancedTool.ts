@@ -104,13 +104,13 @@ export class YandexSearchEnhancedTool extends MCPTool<YandexSearchEnhancedInput>
       if (searchResults.error) {
         return {
           content: [{
-            type: 'text' as const,
+            type: 'text',
             text: JSON.stringify({
               error: searchResults.error,
               query: input.query,
             }, null, 2),
           }],
-        };
+        } as any;
       }
 
       // 3. Convert to enhanced results
@@ -151,7 +151,7 @@ export class YandexSearchEnhancedTool extends MCPTool<YandexSearchEnhancedInput>
         
         return {
           content: [{
-            type: 'text' as const,
+            type: 'text',
             text: JSON.stringify({
               ...output,
               metadata: {
@@ -168,13 +168,13 @@ export class YandexSearchEnhancedTool extends MCPTool<YandexSearchEnhancedInput>
               },
             }, null, 2),
           }],
-        };
+        } as any;
       }
 
       // Return basic search results if fetch_content is disabled
       return {
         content: [{
-          type: 'text' as const,
+          type: 'text',
           text: JSON.stringify({
             query: input.query,
             total_results: searchResults.totalResults,
@@ -182,7 +182,7 @@ export class YandexSearchEnhancedTool extends MCPTool<YandexSearchEnhancedInput>
             note: 'Content fetching disabled. Enable fetch_content for full analysis.',
           }, null, 2),
         }],
-      };
+      } as any;
 
     } catch (error) {
       const errorMessage = error instanceof Error ? error.message : 'Unknown error';
@@ -190,13 +190,13 @@ export class YandexSearchEnhancedTool extends MCPTool<YandexSearchEnhancedInput>
       
       return {
         content: [{
-          type: 'text' as const,
+          type: 'text',
           text: JSON.stringify({
             error: errorMessage,
             query: input.query,
           }, null, 2),
         }],
-      };
+      } as any;
     }
   }
 

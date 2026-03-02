@@ -89,18 +89,18 @@ export class YandexSearchTool extends MCPTool<YandexSearchInput> {
 
       return {
         content: [{
-          type: 'text' as const,
+          type: 'text',
           text: JSON.stringify(results, null, 2),
         }],
-      };
+      } as any;
     } catch (error) {
       const errorMessage = error instanceof Error ? error.message : 'Unknown error occurred';
       return {
         content: [{
-          type: 'text' as const,
+          type: 'text',
           text: JSON.stringify({ error: errorMessage }, null, 2),
         }],
-      };
+      } as any;
     }
   }
 }
