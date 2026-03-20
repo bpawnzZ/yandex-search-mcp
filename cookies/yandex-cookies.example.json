@@ -1,0 +1,54 @@
+[
+  {
+    "domain": ".yandex.com",
+    "expirationDate": 1800000000.000000,
+    "hostOnly": false,
+    "httpOnly": false,
+    "name": "is_gdpr",
+    "path": "/",
+    "sameSite": "no_restriction",
+    "secure": true,
+    "session": false,
+    "storeId": null,
+    "value": "0"
+  },
+  {
+    "domain": ".yandex.com",
+    "expirationDate": 1800000000.000000,
+    "hostOnly": false,
+    "httpOnly": true,
+    "name": "Session_id",
+    "path": "/",
+    "sameSite": "no_restriction",
+    "secure": true,
+    "session": false,
+    "storeId": null,
+    "value": "YOUR_SESSION_ID_HERE"
+  },
+  {
+    "domain": ".yandex.com",
+    "expirationDate": 1800000000.000000,
+    "hostOnly": false,
+    "httpOnly": false,
+    "name": "yandexuid",
+    "path": "/",
+    "sameSite": "no_restriction",
+    "secure": true,
+    "session": false,
+    "storeId": null,
+    "value": "YOUR_YANDEXUID_HERE"
+  },
+  {
+    "domain": ".yandex.com",
+    "expirationDate": 1800000000.000000,
+    "hostOnly": false,
+    "httpOnly": false,
+    "name": "yandex_login",
+    "path": "/",
+    "sameSite": "no_restriction",
+    "secure": true,
+    "session": false,
+    "storeId": null,
+    "value": "YOUR_USERNAME_HERE"
+  }
+]
