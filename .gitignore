@@ -2,4 +2,15 @@
 node_modules
 dist
 .DS_Store
-
+.kilocode
+.notes/
+CLAUDE.md
+AGENTS.md
+.claude/
+.claude-flow/
+.mcp.json
+logs/
+tts-mcp.log
+cookies/
+test-*.ts
+test-*.js
