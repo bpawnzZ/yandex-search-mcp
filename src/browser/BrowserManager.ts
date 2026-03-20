@@ -99,7 +99,11 @@ export class BrowserManager {
     // Check for proxy configuration
     const proxyUrl = process.env.PROXY_URL;
     const proxyConfig = proxyUrl ? { server: proxyUrl } : undefined;
+<<<<<<< HEAD
     
+=======
+
+>>>>>>> main
     if (proxyConfig) {
       console.log('[BrowserManager] Using proxy:', proxyUrl);
     }
@@ -130,6 +134,7 @@ export class BrowserManager {
 
     // Pre-warm the browser by visiting Yandex homepage
     await this.prewarmBrowser();
+<<<<<<< HEAD
   }
 
   private async applyStealthScripts(): Promise<void> {
@@ -295,6 +300,8 @@ export class BrowserManager {
         console.log('[BrowserManager] Retry pre-warm also failed:', retryError);
       }
     }
+=======
+>>>>>>> main
   }
 
   public async getContext(): Promise<BrowserContext> {
@@ -311,6 +318,161 @@ export class BrowserManager {
     return this.page!;
   }
 
+<<<<<<< HEAD
+=======
+  private async applyStealthScripts(): Promise<void> {
+    if (!this.context) return;
+
+    // Add stealth scripts to mask automation
+    await this.context.addInitScript(() => {
+      // Override navigator.webdriver
+      Object.defineProperty(navigator, 'webdriver', {
+        get: () => undefined,
+      });
+
+      // Override permissions
+      const originalQuery = window.navigator.permissions.query;
+      window.navigator.permissions.query = (parameters: PermissionDescriptor) => (
+        parameters.name === 'notifications'
+          ? Promise.resolve({ state: Notification.permission }) as Promise<PermissionStatus>
+          : originalQuery(parameters)
+      );
+
+      // Hide automation flags
+      Object.defineProperty(navigator, 'plugins', {
+        get: () => [
+          {
+            0: {type: "application/x-google-chrome-pdf", suffixes: "pdf", description: "Portable Document Format", enabledPlugin: Plugin},
+            description: "Portable Document Format",
+            filename: "internal-pdf-viewer",
+            length: 1,
+            name: "Chrome PDF Plugin"
+          },
+          {
+            0: {type: "application/pdf", suffixes: "pdf", description: "", enabledPlugin: Plugin},
+            description: "",
+            filename: "mhjfbmdgcfjbbpaeojofohoefgiehjai",
+            length: 1,
+            name: "Chrome PDF Viewer"
+          },
+          {
+            0: {type: "application/x-nacl", suffixes: "", description: "", enabledPlugin: Plugin},
+            1: {type: "application/x-pnacl", suffixes: "", description: "", enabledPlugin: Plugin},
+            description: "",
+            filename: "internal-nacl-plugin",
+            length: 2,
+            name: "Native Client"
+          }
+        ],
+      });
+
+      // Override languages
+      Object.defineProperty(navigator, 'languages', {
+        get: () => ['en-US', 'en'],
+      });
+
+      // Add chrome runtime
+      if (!(window as any).chrome) {
+        (window as any).chrome = { runtime: {} };
+      }
+
+      // Add notification permission
+      const originalNotification = window.Notification;
+      (window as any).Notification = function(title: string, options?: NotificationOptions) {
+        return originalNotification.call(this as any, title, options);
+      };
+      Object.defineProperty(window.Notification, 'permission', {
+        get: () => originalNotification.permission,
+        configurable: true
+      });
+      (window as any).Notification.requestPermission = originalNotification.requestPermission.bind(originalNotification);
+
+      // Override iframe contentWindow
+      const originalAttachShadow = Element.prototype.attachShadow;
+      Element.prototype.attachShadow = function(options: ShadowRootInit) {
+        const shadow = originalAttachShadow.call(this, options);
+        Object.defineProperty(shadow, 'mode', { get: () => options.mode });
+        return shadow;
+      };
+
+      // Override WebGL fingerprint
+      const getParameter = WebGLRenderingContext.prototype.getParameter;
+      WebGLRenderingContext.prototype.getParameter = function(parameter: number) {
+        if (parameter === 37445) {
+          return 'Intel Inc.';
+        }
+        if (parameter === 37446) {
+          return 'Intel Iris OpenGL Engine';
+        }
+        return getParameter.call(this, parameter);
+      };
+
+      // Add canvas fingerprint randomization
+      const originalToDataURL = HTMLCanvasElement.prototype.toDataURL;
+      HTMLCanvasElement.prototype.toDataURL = function(type?: string, quality?: any) {
+        const result = originalToDataURL.call(this, type, quality);
+        // Add subtle noise to canvas fingerprint
+        return result;
+      };
+    });
+  }
+
+  private async prewarmBrowser(): Promise<void> {
+    if (!this.page) return;
+
+    try {
+      // Visit Yandex homepage to warm up cookies/session
+      console.log('[BrowserManager] Pre-warming browser with yandex.com...');
+      await this.page.goto('https://yandex.com', {
+        waitUntil: 'networkidle',
+        timeout: 30000
+      });
+
+      // Check if we're on CAPTCHA page
+      const isCaptcha = await this.page.evaluate(() => {
+        const captchaSelectors = [
+          '.captcha',
+          '#captcha',
+          '[class*="captcha"]',
+          '[class*="smart-captcha"]',
+          '.CheckboxCaptcha',
+          '.ConfirmCaptcha',
+          '[src*="captcha"]',
+          '[data-captcha]',
+          '[id*="captcha"]'
+        ];
+        const hasCaptchaElement = captchaSelectors.some(selector =>
+          document.querySelector(selector) !== null
+        );
+
+        const hasCaptchaText = document.body.textContent?.toLowerCase().includes('captcha') ||
+               document.body.textContent?.includes('robot check') ||
+               document.body.textContent?.includes('Are you not a robot?') ||
+               document.body.textContent?.includes('Подтвердите, что вы не робот') ||
+               document.body.textContent?.includes('Я не робот');
+
+        return hasCaptchaElement || hasCaptchaText;
+      });
+
+      if (isCaptcha) {
+        console.log('[BrowserManager] CAPTCHA detected during pre-warm');
+        // Try to solve or bypass CAPTCHA if possible
+        await this.attemptCaptchaBypass();
+      } else {
+        console.log('[BrowserManager] Pre-warm successful');
+        // Save cookies after successful pre-warming
+        await this.saveCookies();
+      }
+
+      // Simulate human behavior
+      await this.simulateHumanBehavior();
+
+    } catch (e) {
+      console.log('[BrowserManager] Browser pre-warm error:', e);
+    }
+  }
+
+>>>>>>> main
   public getCookieStatus(): { loaded: boolean; loginCookie?: boolean; expiry?: Date } {
     if (!fs.existsSync(this.cookiesPath)) {
       return { loaded: false };
@@ -319,10 +481,17 @@ export class BrowserManager {
     try {
       const cookiesData = fs.readFileSync(this.cookiesPath, 'utf-8');
       const cookies = JSON.parse(cookiesData);
+<<<<<<< HEAD
       
       const loginCookie = cookies.find((c: any) => c.name === 'Session_id');
       const yandexLogin = cookies.find((c: any) => c.name === 'yandex_login');
       
+=======
+
+      const loginCookie = cookies.find((c: any) => c.name === 'Session_id');
+      const yandexLogin = cookies.find((c: any) => c.name === 'yandex_login');
+
+>>>>>>> main
       return {
         loaded: true,
         loginCookie: !!loginCookie,
@@ -541,6 +710,136 @@ export class BrowserManager {
         const hasCaptchaText = document.body.textContent?.toLowerCase().includes('captcha') ||
                document.body.textContent?.includes('robot check') ||
                document.body.textContent?.includes('Are you not a robot?') ||
+               document.body.textContent?.includes('Подтвердите, что вы не робот') ||
+               document.body.textContent?.includes('Я не робот');
+
+        return hasCaptchaElement || hasCaptchaText;
+      });
+
+      if (!isCaptcha) {
+        console.log('[BrowserManager] CAPTCHA bypass attempt successful!');
+        await this.saveCookies(); // Save the cleared session cookies
+        return true;
+      }
+
+      return false;
+    } catch (error) {
+      console.log('[BrowserManager] CAPTCHA bypass attempt failed:', error);
+      return false;
+    }
+  }
+
+  private async humanLikeDelay(minMs: number = 500, maxMs: number = 2000): Promise<void> {
+    const delay = Math.floor(Math.random() * (maxMs - minMs + 1)) + minMs;
+    await new Promise(resolve => setTimeout(resolve, delay));
+  }
+
+  private async simulateHumanBehavior(): Promise<void> {
+    if (!this.page) return;
+
+    // Random scroll
+    await this.page.evaluate(() => {
+      const scrollAmount = Math.floor(Math.random() * 300) + 100;
+      window.scrollBy(0, scrollAmount);
+    });
+
+    await this.humanLikeDelay(200, 800);
+
+    // Random mouse movement (simulated via JS)
+    await this.page.evaluate(() => {
+      const event = new MouseEvent('mousemove', {
+        view: window,
+        bubbles: true,
+        cancelable: true,
+        clientX: Math.floor(Math.random() * 800) + 200,
+        clientY: Math.floor(Math.random() * 600) + 100,
+      });
+      document.dispatchEvent(event);
+    });
+
+    // Additional human-like behavior to appear more legitimate
+    await this.page.evaluate(() => {
+      // Move mouse to a random position and click
+      const event = new MouseEvent('mousedown', {
+        view: window,
+        bubbles: true,
+        cancelable: true,
+        clientX: Math.floor(Math.random() * 800) + 200,
+        clientY: Math.floor(Math.random() * 600) + 100,
+      });
+      document.dispatchEvent(event);
+
+      // Simulate keyboard activity
+      const keyEvent = new KeyboardEvent('keydown', {
+        key: 'Tab',
+        code: 'Tab',
+        bubbles: true
+      });
+      document.dispatchEvent(keyEvent);
+    });
+  }
+
+  private async attemptCaptchaBypass(): Promise<boolean> {
+    if (!this.page) return false;
+
+    try {
+      console.log('[BrowserManager] Attempting CAPTCHA bypass strategies...');
+
+      // Strategy 1: Clear cookies and reload with fresh session
+      await this.context?.clearCookies();
+
+      // Wait and then reload cookies
+      await this.humanLikeDelay(2000, 4000);
+      await this.loadCookies();
+
+      // Visit homepage again
+      await this.page.goto('https://yandex.com', {
+        waitUntil: 'domcontentloaded',
+        timeout: 30000
+      });
+
+      // Strategy 2: Try with different headers to appear more human-like
+      await this.page.setExtraHTTPHeaders({
+        'Accept-Language': 'en-US,en;q=0.9',
+        'Accept-Encoding': 'gzip, deflate, br',
+        'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8',
+        'Referer': 'https://www.google.com/',
+        'Upgrade-Insecure-Requests': '1',
+        'Sec-Fetch-Dest': 'document',
+        'Sec-Fetch-Mode': 'navigate',
+        'Sec-Fetch-Site': 'cross-site',
+        'Sec-Ch-Ua-Mobile': '?0',
+        'Sec-Ch-Ua-Platform': '"Windows"',
+      });
+
+      // Strategy 3: Simulate human-like navigation patterns
+      await this.simulateHumanBehavior();
+      await this.humanLikeDelay(1000, 3000);
+
+      // Check if CAPTCHA is gone
+      const isCaptcha = await this.page.evaluate(() => {
+        const captchaSelectors = [
+          '.captcha',
+          '#captcha',
+          '[class*="captcha"]',
+          '[class*="smart-captcha"]',
+          '.CheckboxCaptcha',
+          '.ConfirmCaptcha',
+          '[src*="captcha"]',
+          '[data-captcha]',
+          '[id*="captcha"]'
+        ];
+        const hasCaptchaElement = captchaSelectors.some(selector =>
+          document.querySelector(selector) !== null
+        );
+
+        const hasCaptchaText = document.body.textContent?.toLowerCase().includes('captcha') ||
+               document.body.textContent?.includes('robot check') ||
+               document.body.textContent?.includes('robot-check') ||
+               document.body.textContent?.includes('are you a human') ||
+               document.body.textContent?.includes('please confirm') ||
+               document.body.textContent?.includes('smart-captcha') ||
+               document.body.textContent?.includes('are you not a robot?') ||
                document.body.textContent?.includes('Подтвердите, что вы не робот') ||
                document.body.textContent?.includes('Я не робот');
 
@@ -910,9 +1209,15 @@ export class BrowserManager {
       const parsedUrl = new URL(url);
       const isHttps = parsedUrl.protocol === 'https:';
       const module = isHttps ? https : http;
+<<<<<<< HEAD
       
       const postData = JSON.stringify(data);
       
+=======
+
+      const postData = JSON.stringify(data);
+
+>>>>>>> main
       const options = {
         hostname: parsedUrl.hostname,
         port: parsedUrl.port || (isHttps ? 443 : 80),
@@ -926,11 +1231,19 @@ export class BrowserManager {
 
       const req = module.request(options, (res) => {
         let responseData = '';
+<<<<<<< HEAD
         
         res.on('data', (chunk) => {
           responseData += chunk;
         });
         
+=======
+
+        res.on('data', (chunk) => {
+          responseData += chunk;
+        });
+
+>>>>>>> main
         res.on('end', () => {
           try {
             const parsed = JSON.parse(responseData);
@@ -975,7 +1288,11 @@ export class BrowserManager {
         session: sessionId,
         maxTimeout: 60000
       });
+<<<<<<< HEAD
       
+=======
+
+>>>>>>> main
       if (pageData.status !== 'ok') {
         throw new Error(`FlareSolverr error: ${pageData.message || 'Unknown error'}`);
       }
@@ -995,23 +1312,39 @@ export class BrowserManager {
       // Parse the HTML response
       const results: SearchResult[] = [];
       let totalResults = 0;
+<<<<<<< HEAD
       
+=======
+
+>>>>>>> main
       // Extract total results count
       const totalMatch = html.match(/(\d[\d\s,]*)\s+results?/i);
       if (totalMatch) {
         totalResults = parseInt(totalMatch[1].replace(/[\s,]/g, ''), 10);
       }
+<<<<<<< HEAD
       
+=======
+
+>>>>>>> main
       // Simple regex-based extraction
       const titleRegex = /<h2[^>]*>.*?<a[^>]*href="([^"]*)"[^>]*>([^<]*)<\/a>/gi;
       let match;
       let position = 0;
+<<<<<<< HEAD
       
+=======
+
+>>>>>>> main
       while ((match = titleRegex.exec(html)) !== null && position < numResults) {
         position++;
         const url = match[1];
         const title = match[2].replace(/<[^>]*>/g, '').trim();
+<<<<<<< HEAD
         
+=======
+
+>>>>>>> main
         // Try to find snippet
         let snippet = '';
         const snippetStart = html.indexOf('</a>', match.index) + 4;
@@ -1019,7 +1352,11 @@ export class BrowserManager {
         if (snippetEnd > snippetStart) {
           snippet = html.substring(snippetStart, snippetEnd).trim().substring(0, 300);
         }
+<<<<<<< HEAD
         
+=======
+
+>>>>>>> main
         let displayUrl = '';
         try {
           const urlObj = new URL(url);
@@ -1027,7 +1364,11 @@ export class BrowserManager {
         } catch {
           displayUrl = url;
         }
+<<<<<<< HEAD
         
+=======
+
+>>>>>>> main
         results.push({
           position,
           title,
@@ -1036,14 +1377,22 @@ export class BrowserManager {
           displayUrl
         });
       }
+<<<<<<< HEAD
       
+=======
+
+>>>>>>> main
       return {
         query,
         totalResults: totalResults || results.length * 100,
         results: results.slice(0, numResults),
         source: 'browser'
       };
+<<<<<<< HEAD
       
+=======
+
+>>>>>>> main
     } catch (error) {
       const errorMessage = error instanceof Error ? error.message : String(error);
       return {

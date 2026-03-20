@@ -155,7 +155,11 @@ export class YandexSearchTool extends MCPTool<YandexSearchInput> {
       return response;
     } catch (error) {
       const errorMessage = error instanceof Error ? error.message : 'Unknown error occurred';
+<<<<<<< HEAD
       
+=======
+
+>>>>>>> main
       const response: YandexSearchResponse = {
         results: [],
         total: 0,
