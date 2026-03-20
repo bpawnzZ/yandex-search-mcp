@@ -102,10 +102,7 @@ export class YandexSearchEnhancedTool extends MCPTool<YandexSearchEnhancedInput>
       });
 
       if (searchResults.error) {
-        return {
-          error: searchResults.error,
-          query: input.query,
-        };
+        return { error: searchResults.error, query: input.query };
       }
 
       // 3. Convert to enhanced results
@@ -172,11 +169,7 @@ export class YandexSearchEnhancedTool extends MCPTool<YandexSearchEnhancedInput>
     } catch (error) {
       const errorMessage = error instanceof Error ? error.message : 'Unknown error';
       console.error('[YandexEnhanced] Error:', errorMessage);
-      
-      return {
-        error: errorMessage,
-        query: input.query,
-      };
+      return { error: errorMessage, query: input.query };
     }
   }
 
@@ -238,28 +231,9 @@ export class YandexSearchEnhancedTool extends MCPTool<YandexSearchEnhancedInput>
           ...result,
           fetched_content: content,
         });
-
-        // Polite delay between fetches
-        if (fetchedCount < maxPages) {
-          await page.waitForTimeout(1000);
-        }
-
       } catch (error) {
-        console.error(`[YandexEnhanced] Failed to fetch ${result.url}:`, error);
-        enriched.push({
-          ...result,
-          fetched_content: {
-            full_text: '',
-            metadata: {
-              word_count: 0,
-              estimated_tokens: 0,
-              fetch_time_ms: 0,
-              content_type: 'other',
-              status: 'failed',
-              error: error instanceof Error ? error.message : 'Fetch failed',
-            },
-          },
-        });
+        console.error(`[YandexEnhanced] Error fetching ${result.url}:`, error);
+        enriched.push(result);
       }
     }
 
@@ -267,7 +241,7 @@ export class YandexSearchEnhancedTool extends MCPTool<YandexSearchEnhancedInput>
   }
 
   /**
-   * Present output based on context format
+   * Format output based on context_format setting
    */
   private presentOutput(
     formattedContext: any,
@@ -279,46 +253,45 @@ export class YandexSearchEnhancedTool extends MCPTool<YandexSearchEnhancedInput>
     switch (format) {
       case 'raw':
         return {
+          format: 'raw',
           query: input.query,
-          results: results.map(r => ({
-            title: r.title,
+          sources: results.map(r => ({
             url: r.url,
-            content: r.fetched_content?.full_text || 'Not fetched',
+            title: r.title,
+            content: r.fetched_content?.full_text || r.snippet,
             metadata: r.fetched_content?.metadata,
           })),
         };
 
       case 'summarized':
         return {
+          format: 'summarized',
           query: input.query,
           summary: formattedContext.summary,
-          results: results
-            .filter(r => r.fetched_content?.metadata.status === 'success')
-            .map(r => ({
-              title: r.title,
-              url: r.url,
-              snippet: r.snippet,
-              key_points: r.fetched_content?.key_points || [],
-              word_count: r.fetched_content?.metadata.word_count,
-            })),
+          key_findings: formattedContext.key_findings,
+          sources: formattedContext.sources,
         };
 
       case 'qa_ready':
         return {
+          format: 'qa_ready',
           query: input.query,
-          question: `What information is available about "${input.query}"?`,
-          answer: formattedContext.synthesized_knowledge,
-          supporting_evidence: formattedContext.key_findings.map((kf: any) => ({
-            point: kf.finding,
-            source: kf.source,
-            confidence: kf.confidence,
-          })),
-          sources: formattedContext.source_references,
+          direct_answer: formattedContext.synthesized_knowledge?.substring(0, 500),
+          detailed_context: formattedContext.synthesized_knowledge,
+          supporting_evidence: formattedContext.key_findings,
+          source_references: formattedContext.sources,
         };
 
       case 'synthesized':
       default:
-        return formattedContext;
+        return {
+          format: 'synthesized',
+          query: input.query,
+          summary: formattedContext.summary,
+          key_findings: formattedContext.key_findings,
+          synthesized_knowledge: formattedContext.synthesized_knowledge,
+          source_references: formattedContext.sources,
+        };
     }
   }
 }

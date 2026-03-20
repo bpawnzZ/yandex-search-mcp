@@ -355,10 +355,50 @@ Full-featured search with content extraction and analysis.
 
 **Symptom:** Results contain `error: 'CAPTCHA detected'`
 
-**Solution:**
-1. Re-export fresh cookies from your browser
-2. Ensure you're logged into Yandex
-3. Replace cookies in `cookies/yandex-cookies.json`
+**Solutions (in order of effectiveness):**
+
+1. **Use Yandex Search API** (Recommended - 100% reliable):
+   ```bash
+   export YANDEX_SEARCH_API_KEY="your_api_key"
+   export YANDEX_SEARCH_USER_ID="your_user_id"
+   ```
+   See [Yandex Search API Setup](#yandex-search-api-setup) below.
+
+2. **Update Cookies**: Re-export fresh cookies from your browser
+3. **Use Residential Proxy**: Datacenter IPs are often flagged
+4. **Enable FlareSolverr**: Add `FLARESOLVERR_URL` environment variable
+
+### Yandex Search API Setup
+
+The most reliable way to avoid CAPTCHA is using the official Yandex Search API:
+
+1. **Get API Credentials**:
+   - Visit [Yandex Cloud Search API](https://yandex.cloud/en/docs/search-api/)
+   - Create a service account
+   - Generate an API key with `yandex.search-api.execute` scope
+   - Note your User ID
+
+2. **Configure MCP**:
+   ```json
+   {
+     "mcpServers": {
+       "yandex-search": {
+         "command": "node",
+         "args": ["/path/to/yandex-search-mcp/dist/index.js"],
+         "env": {
+           "YANDEX_SEARCH_API_KEY": "your_api_key_here",
+           "YANDEX_SEARCH_USER_ID": "your_user_id_here"
+         }
+       }
+     }
+   }
+   ```
+
+3. **Benefits**:
+   - No CAPTCHA challenges
+   - 30,000 free requests per day
+   - Faster response times
+   - More reliable results
 
 ### Cookie Loading Errors
 
