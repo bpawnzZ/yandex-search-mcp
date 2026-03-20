@@ -47,8 +47,9 @@
 | Feature | Description | Status |
 |---------|-------------|--------|
 | 🔍 **Yandex Search** | Search Yandex with full parameter control | ✅ |
-| 🕵️ **Stealth Mode** | Playwright with anti-detection plugins | ✅ |
-| 🍪 **Cookie Auth** | Persistent authentication to bypass CAPTCHA | ✅ |
+| 🕵️ **Advanced Stealth** | Playwright with enhanced anti-detection plugins | ✅ |
+| 🍪 **Smart Cookie Auth** | Persistent authentication with expiration handling | ✅ |
+| 🛡️ **CAPTCHA Bypass** | Advanced bypass mechanisms with multiple strategies | ✅ |
 | 🌍 **Multi-region** | Support for yandex.com, .ru, .tr, etc. | ✅ |
 | 🔒 **Safe Search** | Content filtering options | ✅ |
 
@@ -62,6 +63,9 @@
 | 💾 **Smart Caching** | LRU cache with domain-specific TTLs | ✅ |
 | 🎯 **Source Diversity** | Prevents domain clustering in results | ✅ |
 | 📈 **Token Management** | Intelligent truncation with sentence preservation | ✅ |
+| 🌐 **Proxy Support** | SOCKS/HTTP proxy integration for IP rotation | ✅ |
+| ⚡ **FlareSolverr** | Integrated CAPTCHA solving service support | ✅ |
+| 👤 **Human Behavior** | Advanced human-like interaction simulation | ✅ |
 
 ## 🚀 Quick Start
 
@@ -305,40 +309,54 @@ Full-featured search with content extraction and analysis.
 ## 🏗️ Architecture
 
 ```
-┌──────────────────────────────────────────────────────────────┐
-│                    Yandex Search MCP                          │
-├──────────────────────────────────────────────────────────────┤
-│                                                               │
-│  ┌──────────────┐     ┌──────────────────────────────────┐   │
-│  │ Basic Search │     │        Enhanced Pipeline         │   │
-│  │              │     │                                  │   │
-│  │ • Search     │     │  ┌─────────────┐  ┌──────────┐   │   │
-│  │ • Snippets   │     │  │   Browser   │→ │  Search  │   │   │
-│  │ • URLs       │     │  │   Manager   │  │          │   │   │
-│  └──────────────┘     │  └─────────────┘  └────┬─────┘   │   │
-│                       │                        │         │   │
-│                       │  ┌─────────────┐  ┌────▼─────┐   │   │
-│                       │  │  Content    │  │ Extract  │   │   │
-│                       │  │  Extractor  │←─┤ Content  │   │   │
-│                       │  └─────────────┘  └────┬─────┘   │   │
-│                       │                        │         │   │
-│                       │  ┌─────────────┐  ┌────▼─────┐   │   │
-│                       │  │  Relevance  │  │   Cache  │   │   │
-│                       │  │   Scorer    │←─┤   (LRU)  │   │   │
-│                       │  └─────────────┘  └──────────┘   │   │
-│                       │                        │         │   │
-│                       │  ┌──────────────────┐  │         │   │
-│                       │  │  LLM Context     │←─┘         │   │
-│                       │  │  Formatter       │            │   │
-│                       │  └──────────────────┘            │   │
-│                       │                        │         │   │
-│                       │  ┌──────────────────┐  │         │   │
-│                       │  │  Structured      │←─┘         │   │
-│                       │  │  JSON Output     │            │   │
-│                       │  └──────────────────┘            │   │
-│                       └──────────────────────────────────┘   │
-│                                                               │
-└──────────────────────────────────────────────────────────────┘
+┌─────────────────────────────────────────────────────────────────────────┐
+│                        Yandex Search MCP v2.0                           │
+├─────────────────────────────────────────────────────────────────────────┤
+│                                                                         │
+│  ┌──────────────┐     ┌─────────────────────────────────────────────┐   │
+│  │ Basic Search │     │              Enhanced Pipeline              │   │
+│  │              │     │                                             │   │
+│  │ • Search     │     │  ┌────────────────────────────────────────┐ │   │
+│  │ • Snippets   │     │  │            Browser Layer              │ │   │
+│  │ • URLs       │     │  │                                       │ │   │
+│  └──────────────┘     │  │  ┌─────────────┐ ┌──────────────────┐ │ │   │
+│                       │  │  │   Stealth   │ │   Proxy/Socks    │ │ │   │
+│                       │  │  │   Scripts   │ │     Support      │ │ │   │
+│                       │  │  └─────────────┘ └──────────────────┘ │ │   │
+│                       │  │                                       │ │   │
+│                       │  │  ┌─────────────┐ ┌──────────────────┐ │ │   │
+│                       │  │  │   Cookie    │ │   FlareSolverr   │ │ │   │
+│                       │  │  │   Handler   │ │     Support      │ │ │   │
+│                       │  │  └─────────────┘ └──────────────────┘ │ │   │
+│                       │  │                                       │ │   │
+│                       │  │  ┌─────────────┐ ┌──────────────────┐ │ │   │
+│                       │  │  │   CAPTCHA   │ │   Human Behavior │ │ │   │
+│                       │  │  │  Bypass     │ │   Simulation     │ │ │   │
+│                       │  │  └─────────────┘ └──────────────────┘ │ │   │
+│                       │  └────────────────────────────────────────┘ │   │
+│                       │                                             │   │
+│                       │  ┌────────────────────────────────────────┐ │   │
+│                       │  │           Content Pipeline             │ │   │
+│                       │  │                                        │ │   │
+│                       │  │  ┌─────────────┐ ┌──────────────────┐ │ │   │
+│                       │  │  │   Search    │ │  Content         │ │ │   │
+│                       │  │  │   Engine    │→│  Extraction      │ │ │   │
+│                       │  │  │             │ │                  │ │ │   │
+│                       │  │  └─────────────┘ └──────────────────┘ │ │   │
+│                       │  │                                        │ │   │
+│                       │  │  ┌─────────────┐ ┌──────────────────┐ │ │   │
+│                       │  │  │  Relevance  │ │    Caching       │ │ │   │
+│                       │  │  │   Scorer    │←│   (LRU/TTL)      │ │ │   │
+│                       │  │  └─────────────┘ └──────────────────┘ │ │   │
+│                       │  │                                        │ │   │
+│                       │  │  ┌─────────────┐ ┌──────────────────┐ │ │   │
+│                       │  │  │  LLM        │ │  Output          │ │ │   │
+│                       │  │  │  Formatter  │ │  Formatting      │ │ │   │
+│                       │  │  └─────────────┘ └──────────────────┘ │ │   │
+│                       │  └────────────────────────────────────────┘ │   │
+│                       └─────────────────────────────────────────────┘   │
+│                                                                         │
+└─────────────────────────────────────────────────────────────────────────┘
 ```
 
 ### Key Components
@@ -353,12 +371,23 @@ Full-featured search with content extraction and analysis.
 
 ### CAPTCHA Detected
 
-**Symptom:** Results contain `error: 'CAPTCHA detected'`
+**Symptom:** Results contain `error: 'CAPTCHA detected and bypass attempts exhausted'`
 
 **Solution:**
 1. Re-export fresh cookies from your browser
-2. Ensure you're logged into Yandex
+2. Ensure you're logged into Yandex and have solved any CAPTCHA challenges
 3. Replace cookies in `cookies/yandex-cookies.json`
+4. Consider using YANDEX_SEARCH_API_KEY for direct API access
+5. Try using a residential proxy via PROXY_URL environment variable
+
+### Advanced CAPTCHA Bypass
+
+The system now includes multiple CAPTCHA bypass strategies:
+- Session refresh with cookie clearing
+- Human-like behavior simulation
+- Header optimization to appear legitimate
+- Exponential backoff with retry mechanisms
+- FlareSolverr integration support
 
 ### Cookie Loading Errors
 
@@ -371,9 +400,10 @@ Full-featured search with content extraction and analysis.
 **Symptom:** Empty or minimal content from pages
 
 **Possible Causes:**
-- Heavy JavaScript (increase wait time)
+- Heavy JavaScript (handled automatically with improved wait times)
 - Login/paywall required
 - Anti-scraping measures
+- Rate limiting (handled by retry mechanisms)
 
 ### High Memory Usage
 
@@ -381,6 +411,15 @@ Full-featured search with content extraction and analysis.
 - Reduce `max_pages` parameter
 - Lower `max_tokens_per_page`
 - Cache will automatically evict old entries
+
+### Proxy Configuration
+
+To use proxy support:
+```bash
+export PROXY_URL="socks5://username:password@proxy-server:port"
+# or
+export PROXY_URL="http://proxy-server:port"
+```
 
 ## 🤝 Contributing
 
